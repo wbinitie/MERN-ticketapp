@@ -4,15 +4,15 @@ import Modal from "react-modal";
 import { FaPlus } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { getTicket, closeTicket } from "../features/tickets/ticketSlice";
-// import {
-//   getNotes,
-//   createNote,
-//   reset as notesReset,
-// } from '../features/notes/noteSlice'
+import {
+  getNotes,
+  createNote,
+  reset as notesReset,
+} from "../features/notes/noteSlice";
 import { useParams, useNavigate } from "react-router-dom";
 import BackButton from "../components/Back";
-// import Spinner from "../components/Spinner";
-// import NoteItem from "../components/NoteItem";
+import Spinner from "../components/Spinner";
+import NoteItem from "../components/NoteItem";
 
 const customStyles = {
   content: {
@@ -36,11 +36,11 @@ function Ticket() {
     (state) => state.tickets
   );
 
-  //   const { notes, isLoading: notesIsLoading } = useSelector(
-  //     (state) => state.notes
-  //   );
+  const { notes, isLoading: notesIsLoading } = useSelector(
+    (state) => state.notes
+  );
 
-  //   const params = useParams();
+  const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { ticketId } = useParams();
@@ -51,7 +51,7 @@ function Ticket() {
     }
 
     dispatch(getTicket(ticketId));
-    // dispatch(getNotes(ticketId))
+    dispatch(getNotes(ticketId));
     // eslint-disable-next-line
   }, [isError, message, ticketId]);
 
@@ -65,7 +65,7 @@ function Ticket() {
   // Create note submit
   const onNoteSubmit = (e) => {
     e.preventDefault();
-    // dispatch(createNote({ noteText, ticketId }))
+    dispatch(createNote({ noteText, ticketId }));
     closeModal();
   };
 
@@ -73,9 +73,9 @@ function Ticket() {
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
-  //   if (isLoading || notesIsLoading) {
-  //     return <Spinner />;
-  //   }
+  if (isLoading || notesIsLoading) {
+    return <Spinner />;
+  }
 
   if (isError) {
     return <h3>Something Went Wrong</h3>;
@@ -138,9 +138,9 @@ function Ticket() {
         </form>
       </Modal>
 
-      {/* {notes.map((note) => (
+      {notes.map((note) => (
         <NoteItem key={note._id} note={note} />
-      ))} */}
+      ))}
 
       {ticket.status !== "closed" && (
         <button onClick={onTicketClose} className="btn btn-block btn-danger">
